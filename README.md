@@ -549,3 +549,67 @@ switch (<testVal>)
 - 执行完每部分的代码后都要有一个`break`语句，将中断switch语句执行该结构后面的语句
 
 ## 如何编写循环代码
+
+### do循环
+
+```c#
+do
+{
+    <code to be looped>
+} while(<Test>);
+```
+
+### while循环
+
+```c#
+while (<Test>)
+{
+    <code to looped>
+}
+```
+
+### for循环
+
+```c#
+for(<initialization>; <condition>; <operation>)
+{
+    <code to loop>
+}
+```
+
+等价于
+
+```c#
+<initialization>;
+while(<condition>)
+{
+    <code to loop>;
+    <operation>;
+}
+```
+
+### 循环的中断
+
+- `break：`立即终止循环
+- `continue：`立即终止当前的循环（执行下一次循环）
+- `return：`跳出循环及包含该循环的函数
+
+### 无限循环
+
+```c#
+while true
+{
+    //code to loop
+}
+```
+
+```c#
+int i = 1;
+while(i <= 10)
+{
+    if ((i % 2) == 0)
+        continue;
+    WriteLine($"{i++}")
+}
+```
+
