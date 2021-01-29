@@ -613,3 +613,242 @@ while(i <= 10)
 }
 ```
 
+> 存疑：第四章习题2
+
+## 本章要点
+
+|   主题   |                             要点                             |
+| :------: | :----------------------------------------------------------: |
+| 布尔逻辑 | 布尔逻辑使用布尔值(true 和false)计算条件。布尔运算符用于比较数值，返回布尔结果。一些布尔运算符也用于对数值的底层位结构执行按位操作，还有一些专门的按位运算符。 |
+|   分支   | 可使用布尔逻辑控制程序流。计算结果为布尔值的表达式可用确定是否执行某个代码块，可以使用if语句或三元运算符(?:)进行简单的分支，或者使用switch语句同时检查多个条件 |
+|   循环   | 循环允许根据指定的条件多次执行代码块。使用do循环和while循环可在布尔表达式为true时执行代码，使用for循环可在循环代码中包含一个计数器。循环可以使用continue中断当前的迭代，或使用break完全中断。一些循环只能在用户强制中断时结束，这些循环称为无限循环。 |
+
+# 第五章 变量的更多内容
+
+## 如何在类型之间进行隐式和显式转换
+
+### 隐式转换
+
+- 无论什么变量类型，所有的数据都是一系列的位，变量的含义是通过解释这些数据的方式来确定的
+- **方式**：直接进行赋值
+
+```c#
+ushort destinationVar;
+char sourceVar = 'a';
+destinationVar = sourceVar;
+WriteLine($"sourceVar:{sourceVar}");          //输出a
+WriteLine($"destinationVar:{destinationVar}");//输出97
+```
+
+- **条件**：转化为的类型所存储的数字的范围要比被转化的类型所存储的数字的范围要大
+  - char类型用一个数字表示Unicode字符集中的一个字符，char和ushort都存储0~65535之间的数字
+
+### 显式转换
+
+- **适用范围**：转化为的类型所存储的数字的范围要比被转化的类型所存储的数字的范围要小，但是被转化的数字在将要转化为的类型所存储的数字的范围之内，这时可以进行强制转换
+
+```c#
+byte destinationVar;
+short sourceVar = 7;
+destinationVar = (byte) sourceVar;
+WriteLine($"desinationVar {destinationVar}"); // 7
+WriteLine($"sourceVar {sourceVar}"); // 7
+```
+
+- **方式：**在被转化数字前面添加将要转化为的类型，之后进行赋值
+
+### 溢出检查
+
+- 转化为的类型所存储的数字的范围要比被转化的类型所存储的数字的范围要小，被转化的数字也在将要转化为的类型所存储的数字的范围之外，这时进行强制转换（显式转换）将会出现溢出的现象。
+- 对于为表达式设置的所谓溢出检查上下文，需要用到两个关键字：`checked`和`unchecked`
+
+```c#
+byte destinationVar;
+short sourceVar = 281;
+destinationVar = checked((byte) sourceVar);
+WriteLine($"desinationVar {destinationVar}");
+WriteLine($"sourceVar {sourceVar}");
+```
+
+- `checked`会检查在类型转换中是否出现数据溢出的现象，如果出现的话程序会崩溃
+- `unchecked`不会检查在类型转换中是否出现数据溢出的现象
+
+也可以在Visual Studio中进行设置，让IDE检查是否在类型转换中出现数据溢出的现象，这时就不用`checked`关键字
+
+具体设置方法如下：
+$$
+项目\rightarrow 属性\rightarrow 生成\rightarrow高级\rightarrow检查运算上溢/下溢
+$$
+
+> 这一设置可能会对程序执行速度带来一定的影响，因此当不再需要时就禁用这个设置。
+
+### 使用`Convert`命令进行显式转换
+
+前面的很多代码中都使用`ToDouble`将输入的字符串转化为`Double`类型的浮点数，但是字符串必须是一个数值的有效表达方式
+
+- `可选符号（加号或减号）`+`0位或多位数字`+`可选句点`+`0位或多位数字`+`可选的e或E`+`可选符号（加号或减号）`+`一位或多位数字`
+- 除了可能还有空格（在序列前或后），不能有其他字符
+
+> 使用`Convert`进行转换，总是要进行溢出检查，`checked`和`unchecked`关键字以及上面配置的属性设置不起作用。
+
+## 如何创建和使用枚举类型
+
+```c#
+enum <typeName> : <underlyingType>
+{
+    <value1> = <actualVal1>,
+    <value2> = <actualVal2>,
+    ...
+    <valueN> = <actualValN>
+}
+```
+
+- 未赋值的任何值会自动获得一个初始值，这个初始值是比上一明确声明的值大1
+- 可以使用一个值作为另一个的基础值：`<value2> = <value1>`
+
+**注意**
+
+- 类型的定义代码放在名称空间中，与Main函数并列。
+
+- `<valueN>`的类型为`<underlyingType>`
+
+- 枚举类型直接输出为对应的名称
+
+  - ```c#
+    origination myDirection;
+    myDirection = origination.north;
+    WriteLine($"myDirection = {myDirection}"); // 输出为myDirection = north
+    ```
+
+    
+
+- 类型转换
+
+  ```
+  enum origination : byte
+  {
+      north = 1,
+      south = 2,
+      west = 3,
+      east = 4
+  }
+  ```
+
+  - 枚举类型转化为基本类型
+
+    - ```c#
+      origination myDirection;
+      myDirection = origination.north;
+      byte myDirectionByte = (byte) myDirection; //  myDirectionByte = 1
+      ```
+
+  - 枚举类型转化为字符串类型
+
+    - ```c#
+      origination myDirection;
+      myDirection = origination.north;
+      string myString = Convert.ToString(myDirection); //myDirectionString = "north"
+      ```
+
+  - 基本类型转化为枚举类型
+
+    - ```
+      byte myByte = 1;
+      myDirection = (origination) myByte;
+      ```
+
+  - 字符串类型转化为枚举类型
+
+    - ```c#
+      string myString = "north";
+      origination myDirection = (origination) Enum.Parse(typeof(origination), myString);
+      ```
+
+## 如何创建和使用结构类型
+
+```c#
+struct <typeName>
+{
+    <accessibility1> <type1> <name1>;
+    <accessibility2> <type2> <name2>;
+    ...
+}
+```
+
+- 结构类型也放在名称空间内，与Main函数并列
+- 通过使用`.`来对结构内的属性进行i引用
+
+## 如何创建和使用数组
+
+### 数组的声明
+
+**方式**
+
+```c#
+<baseType> [] <name> = new <baseType> [ArraySize] {..,..,...}; 
+```
+
+**示例**
+
+```c#
+int [] myArray = new int [5]; //数组大小(可以略过这一步，直接赋给数组内容)，
+myArray = {1,2,3,4,5}; //数组内容
+```
+
+- 需要注意的是：第一行数组大小传入的参数是字面值或者常量
+
+```c#
+const int i = 5;
+int [] myArray = new int [i];
+```
+
+### foreach循环
+
+foreach循环可以使用一种简便的语法可以定位数组中的每个元素：
+
+- 只能对数组内容进行访问，不能改变任何元素的值
+
+**方式**
+
+```c#
+foreach (<baseType> <name> in <array>)
+{
+    //can use <name> for each element
+}
+```
+
+**示例**
+
+```c#
+foreach(string friendName in friendsName)
+{
+    WriteLine(friendName);
+}
+```
+
+### 使用switch case表达式进行模式匹配
+
+C#7中可以基于变量的类型在switch case中进行模式匹配
+
+```c#
+switch(<testVar>)
+{
+    case int value:
+        <code to execute if <testVar> is an int>;
+        bresk;
+    case string s when s.Length == 0:
+        <code to execute if <testVar> is an string and the length of it is 0>;
+        break;
+    case null:
+        <code to execute if <testVar> is null>;
+        break;
+    default:
+        <code to execute if <testVar> != comparisonVals>;
+        bresk;
+}
+```
+
+- case关键字后面紧跟的是想要检查的变量类型，之后是一个声明的变量。`<testVar>`的值将保存到声明的变量中
+- C#7中的when关键字修饰符应用到了switchh case表达式中，when关键字修饰符允许扩展或添加一些额外的条件，以执行case语句中的代码
+
+## 如何处理字符串
