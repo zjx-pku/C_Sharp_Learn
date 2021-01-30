@@ -1129,6 +1129,97 @@ static <returnType> <FunctionName> (<p1type> <p1Name>...,
 - `p1`...的类型为`p1type`...
 - `val1`,`val2`...的类型为`type`
 
+### 引用参数和值参数
+
+#### 值参数
+
+> **值参数：**在使用参数时，是把一个值传递给函数所使用的一个变量。在函数中对此变量的任何修改都不影响函数调用中指定的参数。
+
+**函数**
+
+```c#
+static void ShowDouble(int val)
+{
+    val *= 2;
+    WriteLine($"val doubled = {val}");
+}
+```
+
+**调用**
+
+```c#
+int num = 2;
+int doubleNum;
+doubleNum = ShowDouble(num);
+WriteLine($"num = {num}, doubleNum = {doubleNum}");// num为2,doubleNum为4
+```
+
+#### 引用参数
+
+> **引用参数：**函数处理的变量与函数调用中使用的变量相同，而不仅仅是值相同的变量。对该变量的任何修改都会影响用作参数的变量值
+
+**函数**
+
+```c#
+static void ShowDouble(ref int val)
+{
+    val *= 2;
+    WriteLine($"val doubled = {val}");
+}
+```
+
+**调用**
+
+```c#
+int num = 2;
+int doubleNum;
+doubleNum = ShowDouble(ref num);
+WriteLine($"num = {num}, doubleNum = {doubleNum}");// num为4,doubleNum为4
+```
+
+- `num`不能是常量：`const int num`是错误的
+- `num`必须经过初始化
+
+#### ref用于返回值
+
+**函数定义**
+
+```c#
+static ref int ShowDouble(ref int val)
+{
+    val *= 2;
+    return ref val;
+}
+```
+
+- 函数返回值为`ref int`
+- 函数参数类型为`ref int`
+- 函数返回值前面必须带上`ref`
+
+#### ref用作局部变量
+
+```c#
+int myNum = 2;
+ref int myRefNum = ref myNum;
+```
+
+- 定义引用时要`ref int`
+- 赋值时要在变量前添加`ref`
+
+#### ref返回array
+
+```c#
+static ref int ReturnByRef()
+{
+    int [] array = {2};
+    return ref array[0];
+}
+```
+
+- `array`是引用类型，在没有参数声明的情况下使用`ref`关键字可以返回`arrays`
+
+> 虽然strings是引用类型，但是属于特例，因为它们是不可改变的，修改它们会产生新的string，原有的string则会被解除分配。如果试图通过ref返回string，C#编译器Roslyn会报错。
+
 ## 使用变量作用域
 
 ## 如何结合使用`Main()`函数和命令行参数
