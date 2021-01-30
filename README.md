@@ -1,5 +1,3 @@
-[TOC]
-
 
 
 # 第一章  C#简介
@@ -851,4 +849,191 @@ switch(<testVar>)
 - case关键字后面紧跟的是想要检查的变量类型，之后是一个声明的变量。`<testVar>`的值将保存到声明的变量中
 - C#7中的when关键字修饰符应用到了switchh case表达式中，when关键字修饰符允许扩展或添加一些额外的条件，以执行case语句中的代码
 
+### 多维数组（矩形数组）
+
+#### 声明与初始化
+
+**方法**
+
+```c#
+<baseType> [,] <name> = new <baseType> [i,j]; //n个逗号声明n+1维数组
+//上面示例中声明了二维数组，第一层有i个数组，每个数组有j个元素
+```
+
+**示例**
+
+```c#
+double [,] doubleArray = new double [2,3];
+doubleArray = {{1,2,3},{4,5,6}};
+```
+
+#### 引用
+
+**方法**
+
+```c#
+<name>[a,b];
+```
+
+**示例**
+
+```c#
+doubleArray[0,1];//2
+```
+
+#### 遍历
+
+```c#
+foreach(double number in doubleArray)
+{
+    WriteLine($"{nnumber}");
+}
+//遍历顺序为doubleArray[0,0],doubleArray[0,1]...doubleArray[1,2]
+```
+
+### 数组的数组（锯齿数组）
+
+#### 声明
+
+**方法**
+
+```c#
+<baseType> []...[] jaggedArray;//有多少括号就是几维的
+```
+
+**示例**
+
+```c#
+int [][] jaggedArray;
+```
+
+#### 初始化
+
+**示例**
+
+初始化需要层层初始化：
+
+```c#
+int [][] jaggedArray;
+jaggedArray = new int [2][];
+jaggedArray[0] = new int [3];
+jaggedArray[1] = new int [4];
+```
+
+也可以使用下面的方式
+
+```c#
+int [][] jaggedArray;
+jaggedArray = new int [2][] {
+    new int [] {1,2,3},
+    new int [] {4,5,6,7}
+};
+```
+
+#### 遍历
+
+遍历也需要层层遍历
+
+```c#
+int [][] divisors1To10 = new int [10][];
+divisors1To10 = {
+    new int [] {1},
+    new int [] {1,2},
+    new int [] {1，2，3},
+    new int [] {1,2,3,4},
+    new int [] {1,2,3,4,5},
+    new int [] {1,2,3,4,5,6},
+    new int [] {1,2,3,4,5,6,7},
+    new int [] {1,2,3,4,5,6,7,8},
+    new int [] {1,2,3,4,5,6,7,8,9},
+    new int [] {1,2,3,4,5,6,7,8,9,10}
+}
+foreach( int [] divisorOfInt in divisors1To10)
+{
+    foreach(int divisor in divisorOfInt)
+    {
+        WriteLine($"{divisor}");
+    }
+}
+```
+
+
+
 ## 如何处理字符串
+
+### string类型可以看作char变量的只读数组
+
+使用下面的语法访问每个字符，不能对字符串进行改写！
+
+```c#
+string myString = "A String";
+char myChar = myString[1];//mychar为' '
+```
+
+获得char数组
+
+```c#
+string myString = "A String";
+char [] myChars = myString.ToCharArray();
+```
+
+### 遍历字符串
+
+```c#
+foreach(char myChar in myString)
+{
+    WriteLine($"{myChar}");
+}
+```
+
+### 字符串长度
+
+```c#
+int stringLength = myString.Length;//字符串长度
+```
+
+### 字符串大小写
+
+```c#
+myUpperString = myString.ToUpper();//字符串全部字符大写
+myLowerString = myString.ToLower();//字符串全部字符小写
+```
+
+- `ToUpper()`和`ToLower()`并不会改变`myString`
+
+### 删除字符串前后的空格
+
+```c#
+string userResponse = ReadLine();
+userResponse = userResponse.Trim();//删除字符串前后的空格
+userResponse = userResponse。TrimStart();//删除字符串前的空格
+userResponse = userResponse.TrimEnd();//删除字符串后的空格
+```
+
+### 删除字符串中指定的字符
+
+```c#
+char [] trimChars = [' ', 'e', 's'];
+string userResponse = ReadLine();
+userResponse = userResponse.Trim(trimChars);//删除字符串中指定的字符
+userResponse = userResponse.TrimStart(trimChars);//删除字符串前出现的连续的指定字符，直到下一个字符不在trimChars内
+userResponse = userResponse.TrimEnd(trimChars);//删除字符串后出现的连续的指定字符，直到下一个字符不在trimChars内
+```
+
+### 向字符串中添加指定字符
+
+```c#
+myString = "Bob";
+myString = myString.PadLeft(10,'-');//在字符串左边添加字符-直至字符串长度为10
+myString = myString.PadRight(13, ' ');//在字符串右边添加空格直至字符串长度为13
+```
+
+## 总结
+
+|   主题   |                             要点                             |
+| :------: | :----------------------------------------------------------: |
+| 类型转换 | 值可以从一种类型转换为另一种类型，但是在转换时应该遵循一些规则。隐式转换是自动进行的，但只有当源值类型的所有可能值都在目标值类型中使用时，才能进行隐式转换。也可以进行显式转换，但是可能得不到期望的值，甚至会出错 |
+|   枚举   | 枚举是包含一组离散值的类型，每个离散值都有一个名称。枚举用关键词`enum`定义，以便在代码中理解它们，因为它们枚举的可读性都很强。枚举有基本的数值类型（默认为`int`），可使用枚举值的这个属性在枚举值和数值之间转换，或者标识枚举值。 |
+|   结构   | 结构是同时包含几个不同值的类型。结构使用`struct`关键字定义。包含在结构中的每个值都有类型和名称，存储在结构中的每个值的类型不一定相同。 |
+|   数组   | 数组是同类型数值的集合。数组有固定的大小或长度，确定了数组可以包含多少个值。可以定义多维数组或锯齿数组来保存不同数量和形状的数据。还可以使用`foreach`循环来迭代数组中的值 |
+
