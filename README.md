@@ -1220,9 +1220,208 @@ static ref int ReturnByRef()
 
 > 虽然strings是引用类型，但是属于特例，因为它们是不可改变的，修改它们会产生新的string，原有的string则会被解除分配。如果试图通过ref返回string，C#编译器Roslyn会报错。
 
+### 输出参数
+
+除了按引用传递值外，还可以使用`out`关键字，指定所给参数是一个**输出参数**。
+
+#### `out`关键字的使用方法：
+
+在函数定义和函数调用中用作参数的修饰符（同`ref`类似），也有不同：
+
+- 把未赋值的用作`ref`参数是非法的，但是可以把未赋值的变量用作`out`参数
+- 调用代码时可以使用已经赋值的变用作`out`参数，但是存储在该变量中的值在函数执行的时候会丢失
+
+```c#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using static System.Console;
+
+namespace Ch06Ex05
+{
+    class Program
+    {
+        static int MaxValue(int [] array, out int maxIndex)//函数声明的时候带上out
+        {
+            int maxValue = array[0];
+            maxIndex = 0;					//初始化
+            
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] > maxValue)
+                {
+                    maxValue = array[i];
+                    maxIndex = i;
+                }
+            }
+            return maxValue;
+        }
+        static void Main(string[] args)
+        {
+            int[] array = { 1, 3, 5, 6, 9 };
+            WriteLine($"The maxValue is {MaxValue(array, out int maxIndex)}.");//函数调用的时候也要带上out
+            WriteLine($"The index of the maxValue(first occurrence) is {maxIndex}.");
+            ReadLine();
+        }
+    }
+}
+
+```
+
+
+
 ## 使用变量作用域
 
+### 局部变量
+
+### 全局变量
+
+#### 声明
+
+```c#
+static string myString;
+```
+
+- 与Main函数并列
+- 声明前必须有`static`或者`const`，后者代表变量不可修改
+
+#### 调用
+
+全局变量声明后，在任何位置都可以进行调用
+
+**如果全局变量和局部变量重名**
+
+```c#
+Program.myString = "myString in prgram";
+```
+
+**不存在局部变量和全局变量重名**
+
+```c#
+myString = "myString in program";
+```
+
+### 其他结构中变量的作用域
+
+```c#
+int i;
+string myString = "";
+for(i = 0; i < 10; i++)
+{
+    myString = "Line {Convert.String(i)}";
+    WriteLine(${myString});
+}
+WriteLine($"{myString}");//Line 9
+```
+
+- 定义在`for`循环之外的`myString`才能够相当于一个“全局变量”
+- `myString`声明后必须进行**赋值**，因为赋值代表着申请一块内存空间。如果赋值在循环内发生，那么该值实际上被定义为一个局部值
+
+### 参数和返回值与全局数据
+
+```c#
+class Program
+    {
+        static void ShowDouble(ref int val)
+        {
+            val *= 2;
+            WriteLine($"val doubled = {val}");
+        }
+        static void Main(string[] args)
+        {
+            int val = 3;
+            WriteLine($"val = {val}"); //3
+            ShowDouble(ref val);       //6
+            WriteLine($"val = {val}"); //6
+            ReadKey();
+        }
+    }
+```
+
+```c#
+    class Program
+    {
+        static int val;
+        static void ShowDouble()
+        {
+            val *= 2;
+            WriteLine($"val douled = {val}");
+        }
+        static void Main(string[] args)
+        {
+            val = 3;
+            WriteLine($"val = {val}"); //3
+            ShowDouble();              //6
+            WriteLine($"val = {val}"); //6
+            ReadKey();
+        }
+    }
+```
+
+```c#
+class Program
+    {
+        static void ShowDouble(out int val)
+        {
+            val = 3;
+            val *= 2;
+            WriteLine($"val douled = {val}");
+        }
+        static void Main(string[] args)
+        {
+            int val = 3;
+            WriteLine($"val = {val}"); //3
+            ShowDouble(out val);       //6
+            WriteLine($"val = {val}"); //6
+            ReadKey();
+        }
+    }
+```
+
+以上三段代码运行结果相同，但是
+
+- 第二段代码使用全局变量，会对函数的灵活性有行为的限制。要存储结果，就必须总是把这个全局变量值复制到其他变量值中。全局变量还可能在应用程序中的其他地方被代码修改，这会导致预料不到的后果
+- 第一段代码使用`ref`，变量`val`成为引用变量
+- 第三段代码使用`out`，`ShowDouble`函数运行结束前最后的`val`作为输出参数
+
+### 局部函数
+
+函数定义在Main函数之内，不能从Program类中的其他函数中调用这个函数。函数在声明时不必添加`static`例如：
+
+```c#
+class Program
+    {
+        static void Main(string[] args)
+        {
+            int myNumber = 5;
+            WriteLine($"Main Function = {myNumber}.");
+            DoubleInt(myNumber);
+            ReadKey();
+
+            void DoubleInt(int val)
+            {
+                val *= 2;
+                WriteLine($"Local Function = {val}.");
+            }
+
+        }
+    }
+```
+
 ## 如何结合使用`Main()`函数和命令行参数
+
+- `Main()`函数是C#程序的入口，执行这个函数就是执行应用程序。在执行过程开始时，会执行Main()函数，在Main()函数执行完毕后，执行过程就结束了
+- Main()函数的返回值为`void`或者`int`，返回值为int时用于表示应用程序的终止方式。一般来说返回值为0表示应用程序已经执行完毕并安全地终止。通常用作错误提示
+- Main()函数有一个可选参数`string[] args`，提供了一种从应用程序的外部接受信息的方法，这些信息在运行应用程序时以命令行参数的形式指定
+
+```c#
+static void Main(string[] args);
+static void Main();
+static int Main(string[] args);
+static int Main();
+```
 
 
 
