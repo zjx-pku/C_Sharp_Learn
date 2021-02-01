@@ -1323,61 +1323,61 @@ WriteLine($"{myString}");//Line 9
 
 ```c#
 class Program
+{
+    static void ShowDouble(ref int val)
     {
-        static void ShowDouble(ref int val)
-        {
-            val *= 2;
-            WriteLine($"val doubled = {val}");
-        }
-        static void Main(string[] args)
-        {
-            int val = 3;
-            WriteLine($"val = {val}"); //3
-            ShowDouble(ref val);       //6
-            WriteLine($"val = {val}"); //6
-            ReadKey();
-        }
+        val *= 2;
+        WriteLine($"val doubled = {val}");
     }
-```
-
-```c#
-    class Program
+    static void Main(string[] args)
     {
-        static int val;
-        static void ShowDouble()
-        {
-            val *= 2;
-            WriteLine($"val douled = {val}");
-        }
-        static void Main(string[] args)
-        {
-            val = 3;
-            WriteLine($"val = {val}"); //3
-            ShowDouble();              //6
-            WriteLine($"val = {val}"); //6
-            ReadKey();
-        }
+        int val = 3;
+        WriteLine($"val = {val}"); //3
+        ShowDouble(ref val);       //6
+        WriteLine($"val = {val}"); //6
+        ReadKey();
     }
+}
 ```
 
 ```c#
 class Program
+{
+    static int val;
+    static void ShowDouble()
     {
-        static void ShowDouble(out int val)
-        {
-            val = 3;
-            val *= 2;
-            WriteLine($"val douled = {val}");
-        }
-        static void Main(string[] args)
-        {
-            int val = 3;
-            WriteLine($"val = {val}"); //3
-            ShowDouble(out val);       //6
-            WriteLine($"val = {val}"); //6
-            ReadKey();
-        }
+        val *= 2;
+        WriteLine($"val douled = {val}");
     }
+    static void Main(string[] args)
+    {
+        val = 3;
+        WriteLine($"val = {val}"); //3
+        ShowDouble();              //6
+        WriteLine($"val = {val}"); //6
+        ReadKey();
+    }
+}
+```
+
+```c#
+class Program
+{
+    static void ShowDouble(out int val)
+    {
+        val = 3;
+        val *= 2;
+        WriteLine($"val douled = {val}");
+    }
+    static void Main(string[] args)
+    {
+        int val = 3;
+        WriteLine($"val = {val}"); //3
+        ShowDouble(out val);       //6
+        WriteLine($"val = {val}"); //6
+        ReadKey();
+    }
+}
 ```
 
 以上三段代码运行结果相同，但是
@@ -1423,10 +1423,120 @@ static int Main(string[] args);
 static int Main();
 ```
 
-
-
 ## 如何把函数提供为结构类型成员
+
+```c#
+struct CustomerName
+        {
+            public string firstName, lastName;
+            public string Name() => firstName + " " + lastName;
+        }
+        static void Main(string[] args)
+        {
+            CustomerName myCustomerName;
+            myCustomerName.firstName = "John";
+            myCustomerName.lastName = "Franklin";
+            WriteLine($"myCustomer's name is {myCustomerName.Name()}");
+            ReadKey();
+        }
+```
+
+除了数据，结构`struct`还可以包含函数，函数可以访问结构内的数据成员，函数在结构中可以看作全局成员
 
 ## 如何使用函数重载
 
+> **函数的签名：**包括**函数名**和**参数**，在函数定义过程中要保证所有函数的签名不同
+
+```c#
+static int MaxValue(int [] intArray)
+{
+    int maxValue = intArray[0];
+    foreach(int value in intArray)
+    {
+        if (value > maxValue)
+            maxValue = value;
+    }
+    return maxValue;
+}
+static double MaxValue(double [] doubleArray)
+{
+    double maxValue = doubleArray[0];
+    foreach(double value in doubleArray)
+    {
+        if (value > maxValue)
+            maxValue = value;
+    }
+    return maxValue;
+}
+
+static void ShowDouble(ref int val)
+{
+    val *= 2;
+    WriteLine($"doubled val = {val}");
+}
+static void ShowDouble(int val)
+{
+    val *= 2;
+    WriteLine($"doubled val = {val}");
+}
+
+static void Main(string[] args)
+{
+    int[] intArray = { 1, 2, 3, 4, 5 };
+    double[] doubleArray = { 1.1, 2.2, 3.3, 4.4, 5.5 };
+    int intMaxValue = MaxValue(intArray);
+    double doubleMaxValue = MaxValue(doubleArray);
+    WriteLine($"intMaxValue = {intMaxValue}, doubleMaxValue = {doubleMaxValue}.");//5,5.5
+
+    int val1 = 2, val2 = 2;
+    ShowDouble(ref val1);           //4
+    WriteLine($"val1 = {val1}.");   //4
+    ShowDouble(val2);               //4
+    WriteLine($"val2 = {val2}.");   //2
+    ReadKey();
+
+}
+```
+
+- 上面的代码中定义了两个`MaxValue`函数和两个`ShowDouble`函数
+- 调用哪个`MaxValue`函数取决于传入的参数是`int`类型的数组还是`double`类型的数组
+- 调用哪个`ShowDouble`函数取决于传入的参数是否带有`ref`
+
 ## 如何使用委托
+
+委托是一种存储函数引用的类型，使用`delegate`关键字，委托的声明指定了一个返回类型和一个参数列表
+
+```c#
+delegate double ProcessDelegate (double param1, double param2)
+```
+
+定义了委托之后就可以声明该委托的变量（与委托具有相同返回类型和参数的函数引用）
+
+```c#
+static double Multiply (double param1, double param2) => param1 * param2;
+static double Divide (double param1, double param2) => param1 / param2;
+```
+
+**使用委托来访问函数**
+
+```c#
+static void Main(string [] args)
+{
+    ProcessDelegate process1, process2;
+    process1 = new ProcessDelegate(Multiply); // 或者process1 = Multiply
+    process2 = new ProcessDelegate(Divide);   // 或者process2 = Divide
+}
+```
+
+这时`process1`和`process2`就相当于函数`Multiply`和`Divide`，可以向其传入参数得到返回值
+
+## 总结
+
+|     主题     |                             要点                             |
+| :----------: | :----------------------------------------------------------: |
+|   定义函数   | 用函数名、0个或多个参数及返回类型来定义函数。函数的名称和参数统称为函数的签名。可以定义名称相同但签名不同的多个函数——这称为函数重载。也可以在结构类型中定义函数 |
+| 返回值和参数 | 函数的返回类型可以是任意类型，如果函数没有返回值，其返回类型就是`void`。参数也可以是任意类型，由一个用逗号分隔的类型和名称对组成。个数不定的特定类型的参数可以通过参数数组来指定。参数可以指定为`ref`或`out`，以便给调用者返回值。调用函数时，所指定的参数的类型和顺序必须匹配函数的定义，并且如果参数定义中使用了`ref`和`out`关键字，那么在调用函数的时候也必须包括对应的`ref`和`out`关键字 |
+|  变量作用域  | 变量根据定义它们的代码块来界定其使用范围。代码块包括方法和其他结构，例如循环体。可在不同的作用域中定义多个不同的同名变量 |
+|  命令行参数  | 在执行应用程序的时候，控制台应用程序中的Main函数可接收传送给应用程序的命令行参数。这些参数用空格隔开，较长的参数可以放在引号中传送 |
+|     委托     | 除了直接调用函数外，还可以通过委托调用它们。委托是用返回类型和参数列表定义的变量，给定的委托类型可以匹配返回类型和参数与委托定义相同的方法。 |
+
