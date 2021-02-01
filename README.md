@@ -1540,3 +1540,99 @@ static void Main(string [] args)
 |  命令行参数  | 在执行应用程序的时候，控制台应用程序中的Main函数可接收传送给应用程序的命令行参数。这些参数用空格隔开，较长的参数可以放在引号中传送 |
 |     委托     | 除了直接调用函数外，还可以通过委托调用它们。委托是用返回类型和参数列表定义的变量，给定的委托类型可以匹配返回类型和参数与委托定义相同的方法。 |
 
+# 面向对象的C#语言
+
+## 类 字段 方法
+
+### 类、字段、方法
+
+面向对象的C#语言总是把现实中的事物抽象为类，类的最基本要素是：
+
+- **字段(field)**：变量
+- **方法(method)**：函数（对象的行为）
+
+```c#
+class Person
+{
+    public strign name;
+    public int age;
+    public void SayHello()
+    {
+        Console.WriteLine("Hello! My name is " + name);
+    }
+    public string GetInfo()
+    {
+        return "Name:" + name + ",Age:" + age;
+    }
+}
+```
+
+### 构造方法constructor
+
+#### 构造方法
+
+> **构造方法：**构造方法的主要作用是完成对象的初始化工作
+
+- 构造方法的方法名与类名相同
+- 构造方法没有返回类型，也不能写void
+
+```c#
+public Person (string n, int a)
+{
+    name = n;
+    age = a;
+}
+```
+
+#### 默认构造方法
+
+如果用户没有定义任何构造方法，系统则会自动产生一个**默认构造方法**
+
+```c#
+public Person() {}
+```
+
+#### 对象的创建
+
+构造方法不能显式地直接调用，而是用new来调用
+
+```c#
+Person p = new Person("Liming", 20);
+```
+
+#### 对象的使用
+
+```c#
+Console.WriteLine(p.name);
+p.SayHello();
+```
+
+### 析构方法
+
+由于C#自动进行对象的释放，所以要用户一般不定义析构方法
+
+### 使用this
+
+this指的是这个对象本身，常用于
+
+- 访问这个对象的字段以及方法
+- 区分字段与局部变量
+
+```c#
+public Person(int age, string name)
+{
+    this.name = name;
+    this.age = age;
+}
+```
+
+- 用于构造方法调用另一个构造方法？？
+
+```c#
+public Person() :this(0, "")
+{
+    //构造方法的其他语句
+}
+```
+
+## 属性 索引
