@@ -1,0 +1,57 @@
+﻿<Window x:Class="Karlicards.GUI.OptionsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Karlicards.GUI"
+        mc:Ignorable="d"
+        Title="Options" Height="345" Width="434" ResizeMode="NoResize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="58"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition/>
+            <RowDefinition Height="42"/>
+        </Grid.RowDefinitions>
+        <Canvas Grid.Row="0" Background="#C40D42">
+            <Image Height="56" Canvas.Left="0" Canvas.Top="0" Stretch="UniformToFill" Source="C:\Users\srxh\Desktop\C_Sharp_Learn\Chapter14\Karlicards.GUI\Karlicards.GUI\Images\Banner.png"/>
+            <Label Content="Options" Canvas.Right="10" Canvas.Top="13" Foreground="#FFF7EFEF" FontFamily="Times New Roman" FontSize="24" FontWeight="Bold"/>
+        </Canvas>
+        <Canvas Grid.Row="1" Background="Black">
+            <TabControl Grid.RowSpan="2" Canvas.Left="10" Canvas.Top="2" Width="408" Height="208" Grid.Row="1">
+                <TabItem Header="Game">
+                    <Grid Background="#FFE5E5E5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="9*"/>
+                            <ColumnDefinition Width="97*"/>
+                            <ColumnDefinition Width="296*"/>
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Content="Play against computer" HorizontalAlignment="Left" Margin="2.2,33,0,0" VerticalAlignment="Top" Name="playAgainstComputerCheck" Grid.Column="1" Grid.ColumnSpan="2"/>
+                        <Label Content="Number of players" HorizontalAlignment="Left" Margin="1.2,54,0,0" VerticalAlignment="Top" Grid.Column="1" Grid.ColumnSpan="2" Width="127"/>
+                        <ComboBox HorizontalAlignment="Left" Margin="89.725,58,0,0" VerticalAlignment="Top" Width="86" Name="numberOfPlayersComboBox" SelectedIndex="0" Grid.Column="2">
+                            <ComboBoxItem>2</ComboBoxItem>
+                            <ComboBoxItem>3</ComboBoxItem>
+                            <ComboBoxItem>4</ComboBoxItem>
+                        </ComboBox>
+
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Computer player">
+                    <Grid Background="#FFE5E5E5">
+                        <Label Content="Skill level" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                        <RadioButton Content="Dump" HorizontalAlignment="Left" Margin="37,41,0,0" VerticalAlignment="Top" IsChecked="True" Name="dumpAIRadioButton"/>
+                        <RadioButton Content="Good" HorizontalAlignment="Left" Margin="37,62,0,0" VerticalAlignment="Top" Name="goodAORadioBUtton"/>
+                        <RadioButton Content="Cheats" HorizontalAlignment="Left" Margin="37,83,0,0" VerticalAlignment="Top"/>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Canvas>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" FlowDirection="RightToLeft">
+            <Button Content="_Cancle" Height="22" Width="75" Margin="10,0,0,0" Name="cancleButton"/>
+            <Button Content="_OK" Height="22" Width="75" Margin="10,0,0,0" Name="okButton"/>
+        </StackPanel>
+
+
+    </Grid>
+</Window>
