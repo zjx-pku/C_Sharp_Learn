@@ -18,6 +18,9 @@
             <Label Content="Options" Canvas.Right="10" Canvas.Top="13" Foreground="#FFF7EFEF" FontFamily="Times New Roman" FontSize="24" FontWeight="Bold"/>
         </Canvas>
         <Canvas Grid.Row="1" Background="Black">
+            <Canvas.Resources>
+                <local:NumberOfPlayers x:Key="numberOfPlayersData"/>
+            </Canvas.Resources>
             <TabControl Grid.RowSpan="2" Canvas.Left="10" Canvas.Top="2" Width="408" Height="208" Grid.Row="1">
                 <TabItem Header="Game">
                     <Grid Background="#FFE5E5E5">
@@ -26,12 +29,11 @@
                             <ColumnDefinition Width="97*"/>
                             <ColumnDefinition Width="296*"/>
                         </Grid.ColumnDefinitions>
-                        <CheckBox Content="Play against computer" HorizontalAlignment="Left" Margin="2.2,33,0,0" VerticalAlignment="Top" Name="playAgainstComputerCheck" Grid.Column="1" Grid.ColumnSpan="2"/>
+                        <CheckBox Content="Play against computer" HorizontalAlignment="Left" Margin="2.2,33,0,0" VerticalAlignment="Top" Name="playAgainstComputerCheck" Grid.Column="1" Grid.ColumnSpan="2" Checked="PlayAgainstComputerCheck_Checked"/>
                         <Label Content="Number of players" HorizontalAlignment="Left" Margin="1.2,54,0,0" VerticalAlignment="Top" Grid.Column="1" Grid.ColumnSpan="2" Width="127"/>
-                        <ComboBox HorizontalAlignment="Left" Margin="89.725,58,0,0" VerticalAlignment="Top" Width="86" Name="numberOfPlayersComboBox" SelectedIndex="0" Grid.Column="2">
-                            <ComboBoxItem>2</ComboBoxItem>
-                            <ComboBoxItem>3</ComboBoxItem>
-                            <ComboBoxItem>4</ComboBoxItem>
+                        <ComboBox HorizontalAlignment="Left" Margin="89.725,58,0,0" VerticalAlignment="Top" Width="86" 
+                                  Name="numberOfPlayersComboBox" SelectedIndex="0" Grid.Column="2" SelectionChanged="NumberOfPlayersComboBox_SelectionChanged"
+                                  ItemsSource="{Binding Source={StaticResource numberOfPlayersData}}">
                         </ComboBox>
 
                     </Grid>
@@ -39,17 +41,17 @@
                 <TabItem Header="Computer player">
                     <Grid Background="#FFE5E5E5">
                         <Label Content="Skill level" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                        <RadioButton Content="Dump" HorizontalAlignment="Left" Margin="37,41,0,0" VerticalAlignment="Top" IsChecked="True" Name="dumpAIRadioButton"/>
-                        <RadioButton Content="Good" HorizontalAlignment="Left" Margin="37,62,0,0" VerticalAlignment="Top" Name="goodAORadioBUtton"/>
-                        <RadioButton Content="Cheats" HorizontalAlignment="Left" Margin="37,83,0,0" VerticalAlignment="Top"/>
+                        <RadioButton Content="Dump" HorizontalAlignment="Left" Margin="37,41,0,0" VerticalAlignment="Top" IsChecked="True" Name="dumpAIRadioButton" Checked="DumpAIRadioButton_Checked"/>
+                        <RadioButton Content="Good" HorizontalAlignment="Left" Margin="37,62,0,0" VerticalAlignment="Top" x:Name="goodAIRadioButton" Checked="GoodAIRadioButton_Checked"/>
+                        <RadioButton Content="Cheats" HorizontalAlignment="Left" Margin="37,83,0,0" VerticalAlignment="Top" Checked="CheatingAIRadioButton_Checked"/>
                     </Grid>
                 </TabItem>
             </TabControl>
         </Canvas>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" FlowDirection="RightToLeft">
-            <Button Content="_Cancle" Height="22" Width="75" Margin="10,0,0,0" Name="cancleButton"/>
-            <Button Content="_OK" Height="22" Width="75" Margin="10,0,0,0" Name="okButton"/>
+            <Button Content="_Cancle" Height="22" Width="75" Margin="10,0,0,0" Name="cancleButton" Click="CancleButton_Click"/>
+            <Button Content="_OK" Height="22" Width="75" Margin="10,0,0,0" Name="okButton" Click="OkButton_Click"/>
         </StackPanel>
 
 
